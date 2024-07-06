@@ -33,3 +33,8 @@ def tcp_segment(data):
     srcPort, destPort, seqNum, ackNum, offset_reserved_flags = struct.unpack('! H H L L H', data[:14])
     offset = (offset_reserved_flags >> 12) * 4
     return srcPort, destPort, seqNum, ackNum, offset_reserved_flags, data[offset:]
+
+# Unpack UDP Segment
+def udp_segment(data):
+    src_port, dest_port, udp_length = struct.unpack('! H H H', data[:6])
+    return src_port, dest_port, udp_length, data[6:]
