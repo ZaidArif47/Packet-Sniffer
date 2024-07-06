@@ -27,3 +27,9 @@ def ipv4(addr):
 def icmp_packet(data):
     icmp_type, code, checksum = struct.unpack('! B B H', data[:4])
     return icmp_type, code, checksum, data[4:]
+
+# Unpack TCP Segment
+def tcp_segment(data):
+    srcPort, destPort, seqNum, ackNum, offset_reserved_flags = struct.unpack('! H H L L H', data[:14])
+    offset = (offset_reserved_flags >> 12) * 4
+    return srcPort, destPort, seqNum, ackNum, offset_reserved_flags, data[offset:]
