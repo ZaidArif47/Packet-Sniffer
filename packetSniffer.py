@@ -38,3 +38,13 @@ def tcp_segment(data):
 def udp_segment(data):
     src_port, dest_port, udp_length = struct.unpack('! H H H', data[:6])
     return src_port, dest_port, udp_length, data[6:]
+
+def main():
+    mySocket = socket.socket(socket.AF_PACKET, socket.SOCK_RAW, socket.ntohs(3))
+
+    while True:
+        raw_data, addr = mySocket.recvfrom(65536)
+        destinationMAC, sourceMAC, ethernetProtocol, data = ethernetFrame(raw_data)
+        print('\nEthernet Frame:')
+        print(f'Destination: {destinationMAC}, Source: {sourceMAC}, Protocol: {ethernetProtocol}')
+    
