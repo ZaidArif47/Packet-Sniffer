@@ -47,4 +47,11 @@ def main():
         destinationMAC, sourceMAC, ethernetProtocol, data = ethernetFrame(raw_data)
         print('\nEthernet Frame:')
         print(f'Destination: {destinationMAC}, Source: {sourceMAC}, Protocol: {ethernetProtocol}')
-    
+        
+        #IPv4
+        if ethernetProtocol == 8:
+            (version, header_length, ttl, proto, srcIP, destIP, data) = ipv4_packet(data)
+            print(f'\t- IPv4 Packet:')
+            print(f'\t\t- Version: {version}, Header Length: {header_length}, TTL: {ttl}')
+            print(f'Protocol: {proto}, Source: {srcIP}, Destination: {destIP}')
+            
