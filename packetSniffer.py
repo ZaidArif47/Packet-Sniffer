@@ -22,3 +22,8 @@ def ipv4_packet(data):
 # Return properly formatted IPv4 address
 def ipv4(addr):
     return '.'.join(map(str, addr))
+
+# Unpack ICMP Packet
+def icmp_packet(data):
+    icmp_type, code, checksum = struct.unpack('! B B H', data[:4])
+    return icmp_type, code, checksum, data[4:]
