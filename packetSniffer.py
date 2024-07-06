@@ -1,5 +1,6 @@
 import socket
 import struct
+import textwrap
 
 # Unpack Ethernet Frame
 def ethernetFrame(data):
@@ -39,6 +40,15 @@ def udp_segment(data):
     src_port, dest_port, udp_length = struct.unpack('! H H H', data[:6])
     return src_port, dest_port, udp_length, data[6:]
 
+# Format multi-line data
+def format_multi_line(prefix, string, size=80):
+    size -= len(prefix)
+    if isinstance(string, bytes):
+        string = ''.join(r'\x{:02x}'.format(byte) for byte in string)
+        if size % 2:
+            size -= 1
+    return '\n'.join([prefix + line for line in textwrap.wrap(string, size)])
+
 def main():
     mySocket = socket.socket(socket.AF_PACKET, socket.SOCK_RAW, socket.ntohs(3))
 
@@ -54,4 +64,36 @@ def main():
             print(f'\t- IPv4 Packet:')
             print(f'\t\t- Version: {version}, Header Length: {header_length}, TTL: {ttl}')
             print(f'Protocol: {proto}, Source: {srcIP}, Destination: {destIP}')
+
+            # ICMP
+            if proto == 1:
+                icmp_type, code, checksum = icmp_packet(data)
+                print(f'\t- ICMP Packet:')
+                print(f'\t\t- Type: {icmp_type}, Code: {code}, Checksum: {checksum}')
+                print(f'\t\t- Data:')
+                print(format_multi_line('\t\t\t', data))
             
+            # TCP
+            elif proto == 6:
+                srcPort, destPort, seqNum, ackNum, offset_reserved_flags, data = tcp_segment(data)
+                print(f'\t- TCP Segment:')
+                print(f'\t\t- Source Port: {srcPort}, Destination Port: {destPort}')
+                print(f'\t\t- Sequence: {seqNum}, Acknowledgment: {ackNum}')
+                print(f'\t\t- Flags: {offset_reserved_flags}')
+                print(f'\t\t- Data:')
+                print(format_multi_line('\t\t\t', data))
+
+            # UDP
+            elif proto == 17:
+                src_port, dest_port, udp_length, data = udp_segment(data)
+                print(f'\t- UDP Segment:')
+                print(f'\t\t- Source Port: {src_port}, Destination Port: {dest_port}, UDP Length: {udp_length}')
+                print(f'\t\t- Data:')
+                print(format_multi_line('\t\t\t', data))
+        
+        else:
+            print(f'Other Ethernet Protocol: {ethernetProtocol}')
+
+# Entry Point
+if __name__ == "__main__":
+    main()
