@@ -51,7 +51,7 @@ The `main` function sets up a raw socket and enters an infinite loop to continuo
 To run the packet sniffer, execute the script directly with admin privileges:
 
 ```bash
-sudo python3 packet_sniffer.py
+sudo python3 packetSniffer.py
 ```
 
 <br>
