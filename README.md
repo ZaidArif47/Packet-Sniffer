@@ -54,6 +54,18 @@ To run the packet sniffer, execute the script directly with admin privileges:
 sudo python3 packetSniffer.py
 ```
 
+### How to Stop
+
+To stop the python script, simply run:
+
+```bash
+^C
+```
+
+The `Ctrl+C` command is known as the "interrupt" command.  
+It is used to terminate a running process or command in the terminal.  
+This sends the SIGINT (Signal Interrupt) signal to the process, prompting it to stop execution.
+
 <br>
 
 # Detailed Explanation
